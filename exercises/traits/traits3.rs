@@ -8,12 +8,20 @@
 // Execute `rustlings hint traits3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 pub trait Licensed {
-    fn licensing_info(&self) -> String;
+    fn licensing_info(&self) -> String{
+        String::from("Some information")
+    }
 }
-
+/*impl Licensed {
+    // TODO: Implement `AppendBar` for type `String`.
+    /*fn append_bar(self) -> Self{
+        self+"Bar"
+    }*/
+    fn licensing_info(&self) -> String{
+        String::from("Some information")
+    }
+}*/
 struct SomeSoftware {
     version_number: i32,
 }
