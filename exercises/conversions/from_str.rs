@@ -31,29 +31,38 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
-
-// Steps:
-// 1. If the length of the provided string is 0, an error should be returned
-// 2. Split the given string on the commas present in it
-// 3. Only 2 elements should be returned from the split, otherwise return an
-//    error
-// 4. Extract the first element from the split operation and use it as the name
-// 5. Extract the other element from the split operation and parse it into a
-//    `usize` as the age with something like `"4".parse::<usize>()`
-// 6. If while extracting the name and the age something goes wrong, an error
-//    should be returned
-// If everything goes well, then return a Result of a Person object
-//
-// As an aside: `Box<dyn Error>` implements `From<&'_ str>`. This means that if
-// you want to return a string error message, you can do so via just using
-// return `Err("my error message".into())`.
-
 impl FromStr for Person {
     type Err = ParsePersonError;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.len()==0{
+            return Err(ParsePersonError::Empty);
+        }
+// 1. If the length of the provided string is 0
+        let info:Vec<&str>=s.split(',').collect();
+        if info.len()!=2 {
+            return Err(ParsePersonError::BadLen);
+        }       
+// 2. Split the given string on the commas present in it.
+        let name=info[0];
+// 3. Extract the first element from the split operation and use it as the name.
+        if name.is_empty(){
+            return Err(ParsePersonError::NoName);
+        }
+// 4. If the name is empty
+        let rsl=info[1].parse::<usize>();
+        if let Ok(age)=rsl{
+            Ok(Person{name:name.to_string(),age:age})
+        }
+// 5. Extract the other element from the split operation and parse it into a `usize` as the age.
+        else{
+            Err(ParsePersonError::ParseInt(rsl.unwrap_err()))
+        }
+// If while parsing the age, something goes wrong
     }
 }
+// As an aside: `Box<dyn Error>` implements `From<&'_ str>`. This means that if
+// you want to return a string error message, you can do so via just using
+// return `Err("my error message".into())`.
 
 fn main() {
     let p = "Mark,20".parse::<Person>().unwrap();
